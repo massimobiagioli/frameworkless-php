@@ -1,11 +1,11 @@
 <?php
 
-namespace Untitled\Modules\Sample\Controllers;
+namespace Untitled\Modules\Handshake\Controllers;
 
 use Http\Request;
 use Http\Response;
 
-class SampleController
+class HandshakeController
 {
     private $request;
     private $response;
@@ -16,11 +16,11 @@ class SampleController
         $this->response = $response;
     }
 
-    public function tester()
+    public function handshake()
     {
-        $this->response->addHeader('Content-Type', 'application/json');
+        $this->response->addHeader('Content-Type', 'text/plain');
         $this->response->setStatusCode(200);
-        $this->response->setContent("asdf1234");
+        $this->response->setContent("HANDSHAKE OK");
     }
 
 }

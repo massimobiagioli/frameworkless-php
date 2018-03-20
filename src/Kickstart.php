@@ -25,22 +25,34 @@ if ($environment !== 'production') {
 $whoops->register();
 
 /**
+ * Environment
+ */
+$dotenv = new \Dotenv\Dotenv(__DIR__ . '/../');
+$dotenv->load();
+
+/**
  * Wrap request and response
  */
-$injector = include('Dependencies.php');
+$injector = include(__DIR__ . '/../conf/dependencies.php');
 $request = $injector->make('Http\HttpRequest');
 $response = $injector->make('Http\HttpResponse');
 
 /**
- * Routing
+ * Define routes
  */
-$dispatcher = \FastRoute\simpleDispatcher(function (\FastRoute\RouteCollector $r) {
-    $routes = include ('Routes.php');
-    foreach ($routes as $route) {
-        $r->addRoute($route[0], $route[1], $route[2]);
+$dispatcher = \FastRoute\simpleDispatcher(function (\FastRoute\RouteCollector $r) {           
+    $moduleRoutePaths = glob(__DIR__ . '/modules/*/conf/routes.php');
+    foreach ($moduleRoutePaths as $moduleRoutePath) {
+        $routes = include($moduleRoutePath);
+        foreach ($routes as $route) {
+            $r->addRoute($route[0], $route[1], $route[2]);
+        }
     }
 });
 
+/**
+ * Dispatch to controller
+ */
 $routeInfo = $dispatcher->dispatch($request->getMethod(), $request->getPath());
 switch ($routeInfo[0]) {
     case \FastRoute\Dispatcher::NOT_FOUND:

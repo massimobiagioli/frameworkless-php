@@ -1,3 +1,3 @@
 <?php
 
-require __DIR__ . '/../src/Kickstart.php';
+require __DIR__ . '/../src/kickstart.php';
